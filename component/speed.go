@@ -1,9 +1,9 @@
 package component
 
 type Speed struct {
-	S float64
+	B, S float64
 }
 
-func NewSpeed(s float64) Speed {
-	return Speed{s}
+func NewSpeed(b, s float64) Speed {
+	return Speed{b, s}
 }

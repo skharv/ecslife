@@ -10,4 +10,5 @@ type Life struct {
 	component.Vision
 	component.Color
 	component.Facing
+	component.Net
 }

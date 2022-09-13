@@ -1,38 +1,80 @@
 package component
 
-import "math/rand"
+import (
+	"math/rand"
+	"time"
+)
 
 type Net struct {
-	InputQuantity        int
-	LayerQuantity        int
-	InternalLayerDensity int
-	OutputQuantity       int
+	InputNeurons  int
+	HiddenNeurons int
+	OutputNeurons int
 
-	Inputs  []float64
-	Layers  [][]float64
-	Outputs []float64
+	InputValues  []float64
+	HiddenValues []float64
+	OutputValues []float64
+
+	InputBiases  []float64
+	HiddenBiases []float64
+	OutputBiases []float64
+
+	ItoHweights []float64
+	HtoOweights []float64
 }
 
-func NewNet(inputs, layers, layerDensity, outputs int) Net {
+func NewNet(inputs, hiddens, outputs int) Net {
+	source := rand.NewSource(time.Now().UnixNano())
+	rand := rand.New(source)
+
+	var ib []float64
+	var iv []float64
+	for i := 0; i < inputs; i++ {
+		r := float64((rand.Intn(10000) - 5000) / 10000)
+		ib = append(ib, r)
+		iv = append(iv, 0.0)
+	}
+
+	var hb []float64
+	var hv []float64
+	for i := 0; i < hiddens; i++ {
+		r := float64((rand.Intn(10000) - 5000) / 10000)
+		hb = append(hb, r)
+		hv = append(hv, 0.0)
+	}
+
+	var ob []float64
+	var ov []float64
+	for i := 0; i < outputs; i++ {
+		r := float64((rand.Intn(10000) - 5000) / 10000)
+		ob = append(ob, r)
+		ov = append(ov, 0.0)
+	}
+
+	var ihw []float64
+	for i := 0; i < inputs*hiddens; i++ {
+		r := float64((rand.Intn(10000) - 5000) / 10000)
+		ihw = append(ihw, r)
+	}
+
+	var how []float64
+	for i := 0; i < hiddens*outputs; i++ {
+		r := float64((rand.Intn(10000) - 5000) / 10000)
+		how = append(how, r)
+	}
+
 	n := Net{
-		InputQuantity:        inputs,
-		LayerQuantity:        layers,
-		InternalLayerDensity: layerDensity,
-		OutputQuantity:       outputs,
+		InputNeurons:  inputs,
+		HiddenNeurons: hiddens,
+		OutputNeurons: outputs,
+		InputValues:   iv,
+		HiddenValues:  hv,
+		OutputValues:  ov,
+		InputBiases:   ib,
+		HiddenBiases:  hb,
+		OutputBiases:  ob,
+		ItoHweights:   ihw,
+		HtoOweights:   how,
 	}
-
-	n.Inputs = n.Inputs[:inputs]
-
-	for i := 0; i < layers; i++ {
-		for j := 0; j < layerDensity; j++ {
-			v := float64(rand.Intn(800))
-			v -= 400
-			v /= 100
-			n.Layers[i] = append(n.Layers[i], v)
-		}
-	}
-
-	n.Outputs = n.Outputs[:outputs]
 
 	return n
 }
