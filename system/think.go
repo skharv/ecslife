@@ -3,6 +3,7 @@ package system
 import (
 	"math"
 	"skharv/ecslife/component"
+	"skharv/ecslife/helper/globals"
 	"time"
 
 	"github.com/sedyh/mizu/pkg/engine"
@@ -36,6 +37,9 @@ func (t *Think) Update(w engine.World) {
 	t.Net.InputValues[1] = t.Speed.S
 
 	t.Net.InputValues[2] = math.Sin(float64(time.Now().UnixMilli()))
+
+	t.Net.InputValues[3] = (t.Position.X/globals.ScreenWidth)*2 - 1
+	t.Net.InputValues[4] = (t.Position.Y/globals.ScreenHeight)*2 - 1
 
 	//Think
 	for i := 0; i < len(t.Net.InputValues); i++ {

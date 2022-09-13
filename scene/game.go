@@ -6,6 +6,7 @@ import (
 	"skharv/ecslife/entity"
 	"skharv/ecslife/helper/globals"
 	"skharv/ecslife/system"
+	"time"
 
 	"github.com/sedyh/mizu/pkg/engine"
 )
@@ -13,6 +14,8 @@ import (
 type Game struct{}
 
 func (g *Game) Setup(w engine.World) {
+	source := rand.NewSource(time.Now().UnixNano())
+
 	w.AddComponents(
 		component.Position{},
 		component.Rotation{},
@@ -39,7 +42,7 @@ func (g *Game) Setup(w engine.World) {
 			Vision:   component.NewVision(150),
 			Color:    component.NewColor(128, 0, 128, 255),
 			Facing:   component.NewFacing(nil),
-			Net:      component.NewNet(3, 10, 2),
+			Net:      component.NewNet(5, 10, 2, source),
 		},
 		&entity.Life{
 			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
@@ -49,7 +52,7 @@ func (g *Game) Setup(w engine.World) {
 			Vision:   component.NewVision(150),
 			Color:    component.NewColor(255, 0, 0, 255),
 			Facing:   component.NewFacing(nil),
-			Net:      component.NewNet(3, 5, 2),
+			Net:      component.NewNet(5, 5, 2, source),
 		},
 		&entity.Life{
 			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
@@ -59,7 +62,52 @@ func (g *Game) Setup(w engine.World) {
 			Vision:   component.NewVision(150),
 			Color:    component.NewColor(128, 255, 128, 255),
 			Facing:   component.NewFacing(nil),
-			Net:      component.NewNet(3, 2, 2),
+			Net:      component.NewNet(5, 32, 2, source),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
+		},
+		&entity.Food{
+			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
+			Radius:   component.NewRadius(5),
+			Color:    component.NewColor(0, 128, 0, 255),
 		},
 		&entity.Food{
 			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
