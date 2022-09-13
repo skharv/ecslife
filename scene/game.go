@@ -25,6 +25,7 @@ func (g *Game) Setup(w engine.World) {
 	w.AddSystems(
 		system.NewRender(),
 		system.NewRaycast(),
+		system.NewThink(),
 	)
 
 	w.AddEntities(
