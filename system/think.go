@@ -3,7 +3,9 @@ package system
 import (
 	"math"
 	"skharv/ecslife/component"
+	"skharv/ecslife/helper/enum"
 	"skharv/ecslife/helper/globals"
+	"skharv/ecslife/helper/num"
 	"time"
 
 	"github.com/sedyh/mizu/pkg/engine"
@@ -15,11 +17,8 @@ type Think struct {
 	*component.Rotation
 	*component.Facing
 	*component.Speed
+	*component.Health
 	*component.Net
-}
-
-func sigmoid(x float64) float64 {
-	return 1.0 / (1.0 + math.Exp(-x))
 }
 
 func NewThink() *Think {
@@ -28,7 +27,7 @@ func NewThink() *Think {
 
 func (t *Think) Update(w engine.World) {
 	//Set inputs
-	if t.Facing.Target == nil {
+	if t.Facing.Target == nil && t.Facing.Type != enum.TypeWall {
 		t.Net.InputValues[0] = -1.0
 	} else {
 		t.Net.InputValues[0] = 1.0
@@ -41,12 +40,9 @@ func (t *Think) Update(w engine.World) {
 	t.Net.InputValues[3] = (t.Position.X/globals.ScreenWidth)*2 - 1
 	t.Net.InputValues[4] = (t.Position.Y/globals.ScreenHeight)*2 - 1
 
-	//Think
-	for i := 0; i < len(t.Net.InputValues); i++ {
-		value := sigmoid(t.Net.InputBiases[i] + t.Net.InputValues[i])
-		t.Net.InputValues[i] = value
-	}
+	t.Net.InputValues[5] = (t.Health.H/t.Health.Max)*2 - 1
 
+	//Think
 	itohcount := 0
 	for i := 0; i < len(t.Net.HiddenValues); i++ {
 		var value float64
@@ -55,7 +51,7 @@ func (t *Think) Update(w engine.World) {
 			itohcount++
 		}
 		value += t.Net.HiddenBiases[i]
-		t.Net.HiddenValues[i] = sigmoid(value)
+		t.Net.HiddenValues[i] = num.Sigmoid(value)
 	}
 
 	htoocount := 0
@@ -66,13 +62,15 @@ func (t *Think) Update(w engine.World) {
 			htoocount++
 		}
 		value += t.Net.OutputBiases[i]
-		t.Net.OutputValues[i] = sigmoid(value)
+		t.Net.OutputValues[i] = num.Sigmoid(value)
 	}
 
 	//Act
-	t.Rotation.R += t.Net.OutputValues[0]
+	t.Rotation.R += t.Net.OutputValues[0]*2 - 1
 	t.Speed.S = t.Net.OutputValues[1] * t.Speed.B
 
 	t.Position.Y += math.Cos(t.Rotation.R*math.Pi/180) * t.Speed.S
+	t.Position.Y = num.Clamp(t.Position.Y, 0, globals.ScreenHeight)
 	t.Position.X += math.Sin(t.Rotation.R*math.Pi/180) * t.Speed.S
+	t.Position.X = num.Clamp(t.Position.X, 0, globals.ScreenWidth)
 }

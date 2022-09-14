@@ -11,4 +11,6 @@ type Life struct {
 	component.Color
 	component.Facing
 	component.Net
+	component.Health
+	component.Type
 }

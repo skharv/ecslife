@@ -13,7 +13,6 @@ type Net struct {
 	HiddenValues []float64
 	OutputValues []float64
 
-	InputBiases  []float64
 	HiddenBiases []float64
 	OutputBiases []float64
 
@@ -24,13 +23,8 @@ type Net struct {
 func NewNet(inputs, hiddens, outputs int, source rand.Source) Net {
 	rand := rand.New(source)
 
-	var ib []float64
 	var iv []float64
 	for i := 0; i < inputs; i++ {
-		r := float64(rand.Intn(10000))
-		r -= 5000
-		r /= 1000
-		ib = append(ib, r)
 		iv = append(iv, 0.0)
 	}
 
@@ -77,7 +71,6 @@ func NewNet(inputs, hiddens, outputs int, source rand.Source) Net {
 		InputValues:   iv,
 		HiddenValues:  hv,
 		OutputValues:  ov,
-		InputBiases:   ib,
 		HiddenBiases:  hb,
 		OutputBiases:  ob,
 		ItoHweights:   ihw,

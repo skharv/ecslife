@@ -6,4 +6,5 @@ type Food struct {
 	component.Position
 	component.Radius
 	component.Color
+	component.Type
 }
