@@ -28,6 +28,7 @@ func (g *Game) Setup(w engine.World) {
 		component.Net{},
 		component.Health{},
 		component.Type{},
+		component.Spawn{},
 	)
 
 	w.AddSystems(
@@ -36,6 +37,7 @@ func (g *Game) Setup(w engine.World) {
 		system.NewThink(),
 		system.NewDecay(),
 		system.NewEat(),
+		system.NewSpawn(),
 	)
 
 	w.AddEntities(
@@ -47,7 +49,7 @@ func (g *Game) Setup(w engine.World) {
 			Vision:   component.NewVision(150),
 			Color:    component.NewColor(128, 0, 128, 255),
 			Facing:   component.NewFacing(nil, 0),
-			Net:      component.NewNet(6, 10, 2, source),
+			Net:      component.NewNet(6, 128, 2, 2, source),
 			Health:   component.NewHealth(100),
 			Type:     component.NewType(enum.TypeLife),
 		},
@@ -59,7 +61,7 @@ func (g *Game) Setup(w engine.World) {
 			Vision:   component.NewVision(150),
 			Color:    component.NewColor(255, 0, 0, 255),
 			Facing:   component.NewFacing(nil, 0),
-			Net:      component.NewNet(6, 5, 2, source),
+			Net:      component.NewNet(6, 64, 2, 4, source),
 			Health:   component.NewHealth(100),
 			Type:     component.NewType(enum.TypeLife),
 		},
@@ -69,101 +71,27 @@ func (g *Game) Setup(w engine.World) {
 			Radius:   component.NewRadius(10),
 			Speed:    component.NewSpeed(2, 0),
 			Vision:   component.NewVision(150),
-			Color:    component.NewColor(128, 255, 128, 255),
+			Color:    component.NewColor(255, 128, 128, 255),
 			Facing:   component.NewFacing(nil, 0),
-			Net:      component.NewNet(6, 32, 2, source),
+			Net:      component.NewNet(6, 4112, 2, 4, source),
 			Health:   component.NewHealth(100),
 			Type:     component.NewType(enum.TypeLife),
 		},
-		&entity.Food{
+		&entity.Life{
 			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
+			Rotation: component.NewRotation(45),
+			Radius:   component.NewRadius(10),
+			Speed:    component.NewSpeed(2, 0),
+			Vision:   component.NewVision(150),
+			Color:    component.NewColor(128, 128, 128, 255),
+			Facing:   component.NewFacing(nil, 0),
+			Net:      component.NewNet(6, 256, 2, 4, source),
+			Health:   component.NewHealth(100),
+			Type:     component.NewType(enum.TypeLife),
 		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
-		},
-		&entity.Food{
-			Position: component.NewPosition(float64(rand.Intn(globals.ScreenWidth)), float64(rand.Intn(globals.ScreenHeight))),
-			Radius:   component.NewRadius(5),
-			Color:    component.NewColor(0, 128, 0, 255),
-			Type:     component.NewType(enum.TypeFood),
+		&entity.FoodSpawner{
+			Spawn: component.NewSpawn(75),
+			Type:  component.NewType(enum.TypeFood),
 		},
 	)
 }

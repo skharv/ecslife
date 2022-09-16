@@ -44,6 +44,17 @@ func (t *Think) Update(w engine.World) {
 
 	//Think
 	itohcount := 0
+	for i := 0; i < len(t.Net.HiddenValues[0]); i++ {
+		var value float64
+		for j := 0; j < len(t.Net.InputValues); j++ {
+			value += (t.Net.InputValues[j] * t.Net.ItoHweights[itohcount])
+			itohcount++
+		}
+		value += t.Net.HiddenBiases[i]
+		t.Net.HiddenValues[i] = num.Sigmoid(value)
+	}
+
+	htohcount := 0
 	for i := 0; i < len(t.Net.HiddenValues); i++ {
 		var value float64
 		for j := 0; j < len(t.Net.InputValues); j++ {

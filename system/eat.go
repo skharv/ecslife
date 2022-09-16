@@ -9,10 +9,6 @@ import (
 )
 
 type Eat struct {
-	*component.Position
-	*component.Radius
-	*component.Facing
-	*component.Health
 }
 
 func NewEat() *Eat {
@@ -20,17 +16,33 @@ func NewEat() *Eat {
 }
 
 func (e *Eat) Update(w engine.World) {
-	if e.Facing.Target != nil {
+	ents := w.View(
+		component.Position{},
+		component.Radius{},
+		component.Facing{},
+		component.Health{},
+	).Filter()
+
+	for _, n := range ents {
 		var pos *component.Position
 		var rad *component.Radius
+		var hea *component.Health
+		var fac *component.Facing
 
-		e.Facing.Target.Get(&pos, &rad)
+		n.Get(&pos, &rad, &hea, &fac)
 
-		if num.Dist(e.Position.X, e.Position.Y, pos.X, pos.Y) < e.Radius.R+rad.R {
-			w.RemoveEntity(e.Facing.Target)
-			e.Facing.Target = nil
-			e.Facing.Type = enum.TypeNone
-			e.Health.H = e.Health.Max
+		if fac.Target != nil {
+			var tPos *component.Position
+			var tRad *component.Radius
+
+			fac.Target.Get(&tPos, &tRad)
+
+			if num.Dist(pos.X, pos.Y, tPos.X, tPos.Y) < rad.R+tRad.R {
+				w.RemoveEntity(fac.Target)
+				fac.Target = nil
+				fac.Type = enum.TypeNone
+				hea.H = hea.Max
+			}
 		}
 	}
 }
