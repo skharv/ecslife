@@ -32,9 +32,9 @@ func (r *Raycast) Update(w engine.World) {
 		component.Type{},
 	).Filter()
 
-	smallestDist := r.Vision.V
 	var target engine.Entity
 	var targetType enum.Type
+	var distance = r.Vision.V
 
 	for _, e := range targets {
 		var pos *component.Position
@@ -58,13 +58,13 @@ func (r *Raycast) Update(w engine.World) {
 			d := num.Dist(vpX, vpY, pos.X, pos.Y)
 
 			if vpX < 0 || vpX > globals.ScreenWidth {
-				smallestDist = d
+				distance = d
 				target = nil
 				targetType = enum.TypeWall
 				break
 			}
 			if vpY < 0 || vpY > globals.ScreenHeight {
-				smallestDist = d
+				distance = d
 				target = nil
 				targetType = enum.TypeWall
 				break
@@ -73,8 +73,8 @@ func (r *Raycast) Update(w engine.World) {
 			if d > rad.R {
 				continue
 			} else {
-				if d < smallestDist {
-					smallestDist = d
+				if d < distance {
+					distance = d
 					target = e
 					targetType = typ.T
 				}
@@ -84,6 +84,7 @@ func (r *Raycast) Update(w engine.World) {
 
 	r.Facing.Target = target
 	r.Facing.Type = targetType
+	r.Facing.Distance = distance
 }
 
 func (r *Raycast) Draw(w engine.World, screen *ebiten.Image) {

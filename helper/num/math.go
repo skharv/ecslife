@@ -21,3 +21,7 @@ func Clamp(value, min, max float64) float64 {
 	}
 	return r
 }
+
+func Lerp(a, b, t float64) float64 {
+	return a + (b-a)*t
+}

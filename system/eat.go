@@ -21,6 +21,7 @@ func (e *Eat) Update(w engine.World) {
 		component.Radius{},
 		component.Facing{},
 		component.Health{},
+		component.Fitness{},
 	).Filter()
 
 	for _, n := range ents {
@@ -28,8 +29,9 @@ func (e *Eat) Update(w engine.World) {
 		var rad *component.Radius
 		var hea *component.Health
 		var fac *component.Facing
+		var fit *component.Fitness
 
-		n.Get(&pos, &rad, &hea, &fac)
+		n.Get(&pos, &rad, &hea, &fac, &fit)
 
 		if fac.Target != nil {
 			var tPos *component.Position
@@ -42,6 +44,8 @@ func (e *Eat) Update(w engine.World) {
 				fac.Target = nil
 				fac.Type = enum.TypeNone
 				hea.H = hea.Max
+				fit.TimeSinceEat = 0
+				break //Not a good solution, but it might fly for a while
 			}
 		}
 	}

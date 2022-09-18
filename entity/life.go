@@ -13,4 +13,5 @@ type Life struct {
 	component.Net
 	component.Health
 	component.Type
+	component.Fitness
 }

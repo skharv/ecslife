@@ -4,125 +4,87 @@ import (
 	"math/rand"
 )
 
+type neuron struct {
+	Value   float64
+	Bias    float64
+	Weights []float64
+}
+
 type Net struct {
 	InputNeurons  int
 	HiddenNeurons int
 	OutputNeurons int
+	HiddenLayers  int
 
-	InputValues  []float64
-	HiddenValues [][]float64
-	//HiddenValues []float64
-	OutputValues []float64
-
-	HiddenBiases []float64
-	OutputBiases []float64
-
-	//ItoHweights []float64
-	HtoHweights [][]float64
-	HtoOweights []float64
-
-	HiddenLayers [][]float64
+	Layers [][]neuron
 }
 
-func NewNet(inputs, hiddens, outputs, layers int, source rand.Source) Net {
+func NewNet(inputNeurons, hiddenNeurons, outputNeurons, hiddenLayers int, source rand.Source) Net {
 	rand := rand.New(source)
 
-	var iv []float64
-	for i := 0; i < inputs; i++ {
-		iv = append(iv, 0.0)
-	}
+	var layers [][]neuron
 
-	var hb []float64
-	var hv [][]float64
-	for i := 0; i < layers; i++ {
-		for j := 0; j < hiddens; j++ {
-			r := float64(rand.Intn(10000))
-			r -= 5000
-			r /= 1000
-			hb = append(hb, r)
-			hv[i] = append(hv[i], r)
-		}
-	}
+	for i := 0; i < hiddenLayers+2; i++ {
+		var layer []neuron
 
-	var hw [][]float64
-	for i := 0; i < layers; i++ {
-		hw = append(hv, []float64{})
 		switch i {
 		case 0:
-			for j := 0; j < inputs*hiddens; j++ {
-				r := float64(rand.Intn(10000))
-				r -= 5000
-				r /= 1000
-				hw[i] = append(hw[i], r)
+			for j := 0; j < inputNeurons; j++ {
+				layer = append(layer, neuron{
+					Value:   0,
+					Bias:    0,
+					Weights: nil,
+				})
 			}
-		case layers - 1:
-			continue
-		default:
-			for j := 0; j < hiddens*hiddens; j++ {
+		case hiddenLayers + 1:
+			for j := 0; j < outputNeurons; j++ {
 				r := float64(rand.Intn(10000))
 				r -= 5000
 				r /= 1000
-				hw[i] = append(hw[i], r)
+
+				var weights []float64
+				for j := 0; j < len(layers[i-1]); j++ {
+					w := float64(rand.Intn(10000))
+					w -= 5000
+					w /= 1000
+					weights = append(weights, w)
+				}
+				layer = append(layer, neuron{
+					Value:   0,
+					Bias:    r,
+					Weights: weights,
+				})
+			}
+		default:
+			for j := 0; j < hiddenNeurons; j++ {
+				r := float64(rand.Intn(10000))
+				r -= 5000
+				r /= 1000
+
+				var weights []float64
+				for j := 0; j < len(layers[i-1]); j++ {
+					w := float64(rand.Intn(10000))
+					w -= 5000
+					w /= 1000
+					weights = append(weights, w)
+				}
+				layer = append(layer, neuron{
+					Value:   0,
+					Bias:    r,
+					Weights: weights,
+				})
 			}
 		}
-	}
 
-	// var ihw []float64
-	// for i := 0; i < inputs*hiddens; i++ {
-	// 	r := float64(rand.Intn(10000))
-	// 	r -= 5000
-	// 	r /= 1000
-	// 	ihw = append(ihw, r)
-	// }
-
-	// var hb []float64
-	// var hv []float64
-	// for i := 0; i < hiddens; i++ {
-	// 	r := float64(rand.Intn(10000))
-	// 	r -= 5000
-	// 	r /= 1000
-	// 	hb = append(hb, r)
-	// 	hv = append(hv, 0.0)
-	// }
-
-	// var ihw []float64
-	// for i := 0; i < inputs*hiddens; i++ {
-	// 	r := float64(rand.Intn(10000))
-	// 	r -= 5000
-	// 	r /= 1000
-	// 	ihw = append(ihw, r)
-	// }
-
-	var ob []float64
-	var ov []float64
-	for i := 0; i < outputs; i++ {
-		r := float64(rand.Intn(10000))
-		r -= 5000
-		r /= 1000
-		ob = append(ob, r)
-		ov = append(ov, 0.0)
-	}
-
-	var how []float64
-	for i := 0; i < hiddens*outputs; i++ {
-		r := float64(rand.Intn(10000))
-		r -= 5000
-		r /= 1000
-		how = append(how, r)
+		layers = append(layers, layer)
 	}
 
 	n := Net{
-		InputNeurons:  inputs,
-		HiddenNeurons: hiddens,
-		OutputNeurons: outputs,
-		InputValues:   iv,
-		HiddenValues:  hv,
-		OutputValues:  ov,
-		HiddenBiases:  hb,
-		OutputBiases:  ob,
-		HtoOweights:   how,
-		//HiddenValues:  hv,
-		//ItoHweights: ihw,
+		InputNeurons:  inputNeurons,
+		HiddenNeurons: hiddenNeurons,
+		OutputNeurons: outputNeurons,
+		HiddenLayers:  hiddenLayers,
+		Layers:        layers,
 	}
 
 	return n

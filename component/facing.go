@@ -7,10 +7,11 @@ import (
 )
 
 type Facing struct {
-	Target engine.Entity
-	Type   enum.Type
+	Target   engine.Entity
+	Type     enum.Type
+	Distance float64
 }
 
 func NewFacing(target engine.Entity, targetType enum.Type) Facing {
-	return Facing{target, targetType}
+	return Facing{target, targetType, -1}
 }
